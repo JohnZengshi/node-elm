@@ -5,29 +5,29 @@ import pinyin from "pinyin"
 import AddressComponent from '../../prototype/addressComponent'
 
 
-class CityHandle extends AddressComponent{
-	constructor(){
+class CityHandle extends AddressComponent {
+	constructor() {
 		super()
 		this.getCity = this.getCity.bind(this);
 		this.getExactAddress = this.getExactAddress.bind(this);
 		this.pois = this.pois.bind(this);
 	}
-	async getCity(req, res, next){
+	async getCity(req, res, next) {
 		const type = req.query.type;
 		let cityInfo;
-		try{
-			switch (type){
-				case 'guess': 
+		try {
+			switch (type) {
+				case 'guess':
 					const city = await this.getCityName(req);
 					cityInfo = await Cities.cityGuess(city);
 					break;
-				case 'hot': 
+				case 'hot':
 					cityInfo = await Cities.cityHot();
 					break;
-				case 'group': 
+				case 'group':
 					cityInfo = await Cities.cityGroup();
 					break;
-				default: 
+				default:
 					res.json({
 						name: 'ERROR_QUERY_TYPE',
 						message: '参数错误',
@@ -35,14 +35,14 @@ class CityHandle extends AddressComponent{
 					return
 			}
 			res.send(cityInfo);
-		}catch(err){
+		} catch (err) {
 			res.send({
 				name: 'ERROR_DATA',
 				message: '获取数据失败',
 			});
 		}
 	}
-	async getCityById(req, res, next){
+	async getCityById(req, res, next) {
 		const cityid = req.params.id;
 		if (isNaN(cityid)) {
 			res.json({
@@ -51,33 +51,33 @@ class CityHandle extends AddressComponent{
 			})
 			return
 		}
-		try{
+		try {
 			const cityInfo = await Cities.getCityById(cityid);
 			res.send(cityInfo);
-		}catch(err){
+		} catch (err) {
 			res.send({
 				name: 'ERROR_DATA',
 				message: '获取数据失败',
 			});
 		}
 	}
-	async getCityName(req){
+	async getCityName(req) {
 		let cityInfo;
-		try{
+		try {
 			cityInfo = await this.guessPosition(req);
-		}catch(err){
+		} catch (err) {
 			console.error('获取IP位置信息失败', err);
 			res.send({
 				name: 'ERROR_DATA',
 				message: '获取数据失败',
 			});
-			return 
+			return
 		}
 		/*
 		汉字转换成拼音
 		 */
-        const pinyinArr = pinyin(cityInfo.city, {
-		  	style: pinyin.STYLE_NORMAL,
+		const pinyinArr = pinyin(cityInfo.city, {
+			style: pinyin.STYLE_NORMAL,
 		});
 		let cityName = '';
 		pinyinArr.forEach(item => {
@@ -85,11 +85,11 @@ class CityHandle extends AddressComponent{
 		})
 		return cityName
 	}
-	async getExactAddress(req, res, next){
-		try{
+	async getExactAddress(req, res, next) {
+		try {
 			const position = await this.geocoder(req)
 			res.send(position);
-		}catch(err){
+		} catch (err) {
 			console.log('获取精确位置信息失败');
 			res.send({
 				name: 'ERROR_DATA',
@@ -97,23 +97,23 @@ class CityHandle extends AddressComponent{
 			});
 		}
 	}
-	async pois(req, res, next){
+	async pois(req, res, next) {
 		const geohash = req.params.geohash;
-		try{
+		try {
 			if (geohash.indexOf(',') == -1) {
 				throw new Error('参数错误')
 			}
-		}catch(err){
+		} catch (err) {
 			console.log('参数错误');
 			res.send({
 				status: 0,
 				type: 'ERROR_PARAMS',
 				message: '参数错误',
 			})
-			return 
+			return
 		}
 		const poisArr = geohash.split(',');
-		try{
+		try {
 			const result = await this.getpois(poisArr[0], poisArr[1]);
 			const address = {
 				address: result.result.address,
@@ -124,7 +124,7 @@ class CityHandle extends AddressComponent{
 				name: result.result.formatted_addresses.recommend,
 			}
 			res.send(address);
-		}catch(err){
+		} catch (err) {
 			console.log('getpois返回信息失败');
 			res.send({
 				status: 0,
