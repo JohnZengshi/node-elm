@@ -266,7 +266,6 @@ class Shop extends AddressComponent{
 			const slpitStr = (index == restaurants.length -1) ? '' : '|';
 			to += item.latitude + ',' + item.longitude + slpitStr;
 		})
-		console.log(to);
 		try{
 			if (restaurants.length) {
 				//获取距离信息，并合并到数据中
