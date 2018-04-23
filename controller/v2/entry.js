@@ -3,14 +3,16 @@
 import EntryModel from '../../models/v2/entry'
 
 class Entry {
-	constructor(){
+	constructor() {
 
 	}
-	async getEntry(req, res, next){
-		try{
-			const entries = await EntryModel.find({}, '-_id');
+	async getEntry(req, res, next) {
+		try {
+			const entries = await EntryModel.find({}, '-__v -_id', (err, docs) => {
+				console.log("获取entries数据成功")
+			}).sort('id');
 			res.send(entries);
-		}catch(err){
+		} catch (err) {
 			console.log('获取数据失败');
 			res.send({
 				status: 0,

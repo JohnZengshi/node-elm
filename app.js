@@ -40,7 +40,6 @@ app.use(session({
 		url: config.url
 	})
 }))
-
 // app.use(expressWinston.logger({
 //     transports: [
 //         new (winston.transports.Console)({

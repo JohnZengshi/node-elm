@@ -258,7 +258,7 @@ class Shop extends AddressComponent{
 			}
 		}
 
-		const restaurants = await ShopModel.find(filter, '-_id').sort(sortBy).limit(Number(limit)).skip(Number(offset))
+		const restaurants = await ShopModel.find(filter, '-_id').sort(sortBy).limit(Number(limit)).skip(Number(offset));
 		const from = latitude + ',' + longitude;
 		let to = '';
 		//获取百度地图测局所需经度纬度
@@ -266,6 +266,7 @@ class Shop extends AddressComponent{
 			const slpitStr = (index == restaurants.length -1) ? '' : '|';
 			to += item.latitude + ',' + item.longitude + slpitStr;
 		})
+		console.log(to);
 		try{
 			if (restaurants.length) {
 				//获取距离信息，并合并到数据中
@@ -363,6 +364,7 @@ class Shop extends AddressComponent{
 	async getShopCount(req, res, next){
 		try{
 			const count = await ShopModel.count();
+			
 			res.send({
 				status: 1,
 				count,
