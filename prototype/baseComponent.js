@@ -78,6 +78,7 @@ export default class BaseComponent {
 
 	async uploadImg(req, res, next) {
 		const type = req.params.type;
+		// console.log(req.query)
 		try {
 			//const image_path = await this.qiniu(req, type);
 			const image_path = await this.getPath(req);

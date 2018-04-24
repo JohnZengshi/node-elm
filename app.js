@@ -13,7 +13,7 @@ import chalk from 'chalk';
 // import Statistic from './middlewares/statistic'
 
 const app = express();
-
+app.use(cookieParser());
 app.all('*', (req, res, next) => {
 	res.header("Access-Control-Allow-Origin", req.headers.origin || '*');
 	res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
@@ -29,7 +29,6 @@ app.all('*', (req, res, next) => {
 
 // app.use(Statistic.apiRecord)
 const MongoStore = connectMongo(session);
-app.use(cookieParser());
 app.use(session({
 	name: config.session.name,
 	secret: config.session.secret,
@@ -37,7 +36,8 @@ app.use(session({
 	saveUninitialized: false,
 	cookie: config.session.cookie,
 	store: new MongoStore({
-		url: config.url
+		url: config.url,
+		ttl: 14 * 24 * 60 * 60
 	})
 }))
 // app.use(expressWinston.logger({

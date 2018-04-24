@@ -111,7 +111,7 @@ class User extends AddressComponent {
 		})
 	}
 	async getInfo(req, res, next) {
-		const sid = req.session.user_id;
+		const sid = req.session.user.user_id;
 		const qid = req.query.user_id;
 		const user_id = sid || qid;
 		if (!user_id || !Number(user_id)) {
@@ -127,6 +127,9 @@ class User extends AddressComponent {
 			const userinfo = await UserInfoModel.findOne({
 				user_id
 			}, '-_id');
+			// req.session.user = {
+			// 	"user_id":user_id,
+			// }
 			res.send(userinfo)
 		} catch (err) {
 			console.log('通过session获取用户信息失败', err);

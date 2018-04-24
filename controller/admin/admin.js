@@ -293,5 +293,4 @@ class Admin extends AddressComponent {
 		}
 	}
 }
-
 export default new Admin()
